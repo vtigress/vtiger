@@ -15,7 +15,7 @@
     {assign var='count' value=0}
     {assign var="dateFormat" value=$USER_MODEL->get('date_format')}
     <div class="navbar commonActionsContainer noprint">
-        <div class="actionsContainer row-fluid clearfix">
+        <div class="actionsContainer row-fluid">
             <div class="span2">
                 <span class="companyLogo"><img src="{$COMPANY_LOGO->get('imagepath')}" title="{$COMPANY_LOGO->get('title')}" alt="{$COMPANY_LOGO->get('alt')}"/>&nbsp;</span>
             </div>
@@ -44,8 +44,10 @@
 
                     </div>
                     <div class="notificationMessageHolder span2">
-
-                    </div>
+                 	<form name="timerform"><font color='red'><strong>Auto logout in <span id="timer"></span></strong></font>
+                 	<input type="hidden" id="ck_open_close" name="ck_open_close" value="close" />
+                 	<input type="hidden" id="autologout_time_1" name="autologout_time" value="{$USER_MODEL->get('autologout_time')}" /></form>
+                     </div>
                     <div class="nav quickActions btn-toolbar span2 pull-right marginLeftZero">
                         <div class="pull-right commonActionsButtonContainer">
                             {if !empty($announcement)}
@@ -67,7 +69,7 @@
                                         <div class="row-fluid">
                                             <div class="span12">
                                                 {foreach key=moduleName item=moduleModel from=$MENUS}
-                                                    {if $moduleModel->isPermitted('CreateView')}
+                                                    {if $moduleModel->isPermitted('EditView')}
                                                         {assign var='quickCreateModule' value=$moduleModel->isQuickCreateSupported()}
                                                         {assign var='singularLabel' value=$moduleModel->getSingularLabelKey()}
 														{if $singularLabel == 'SINGLE_Calendar'}
@@ -99,4 +101,135 @@
             </div>
         </div>
     </div>
+<!--Auto logout universal, Dev: Anjaneya, Date: 25th Oct'2107 -->
+<script src="libraries/timeout/jquery.storageapi.min.js" type="text/javascript"></script>
+<link href="libraries/timeout/jquery-idleTimeout-plus.css" rel="stylesheet" type="text/css" />
+<script src="libraries/timeout/jquery-idleTimeout-plus.js" type="text/javascript"></script>
+<!--End-->
+
+<script type='text/javascript'>
+{literal}
+//Added By sri For auto logout in 15 mins end
+
+    var mu_val = jQuery('#autologout_time_1').val();
+
+if(mu_val == '15 mins') { 
+	mu_val = 900;
+} else if(mu_val == '30 mins') {
+	mu_val = 1800;
+} else if (mu_val == '45 mins') {
+	mu_val = 2700;
+} else if (mu_val == '60 mins') {
+	mu_val = 3600;
+}
+   // mu_val = 36;
+var vtrcount=mu_val;
+
+var vtrcounter=setInterval(timer, 1000);
+function timer()
+{
+  vtrcount=vtrcount-1;
+  if (vtrcount <= 0)
+  {
+     clearInterval(vtrcounter);
+     <!-- Auto logout universal, Dev: Anjaneya, Date: 25th Oct'2107 -->
+		/* var cURL = window.location.href;
+		var url = cURL.split("?");
+		var redURL = url[0]+"?module=Users&action=Logout";		 
+		window.location.href = redURL */
+	/* END */
+		
+  }
+
+ document.getElementById("timer").innerHTML=vtrcount + " secs"; // watch for spelling
+}
+function updateMe( data ) {
+   // alert( data );
+    window.clearInterval(vtrcounter);
+   
+ vtrcount=mu_val;
+
+  vtrcounter=setInterval(timer, 1000);
+}
+document.onkeypress = function (e) {
+    e = e || window.event;
+     window.clearInterval(vtrcounter);
+   
+ vtrcount=mu_val;
+
+  vtrcounter=setInterval(timer, 1000);
+	
+};
+window.ununload = function (e) {
+    e = e || window.event;
+     window.clearInterval(vtrcounter);
+   
+ vtrcount=mu_val;
+
+  vtrcounter=setInterval(timer, 1000);
+	
+};
+
+document.onmousedown = function (e) {
+    e = e || window.event;
+    
+    //console.log(e.currentTarget);
+	//console.log(e.target.attr('id'));
+	//console.log(jQuery(e.currentTarget).closest('[id]'));
+vtrcount=mu_val;
+	var targetid = e.target.id;
+	if(targetid == 'Leads_editView_fieldName_cf_876_select'){
+		//console.log(e.target.id);
+		return false;
+	}else{
+		window.clearInterval(vtrcounter);
+		vtrcounter=setInterval(timer, 1000);
+	}
+	  	
+};
+<!-- Auto logout universal, Dev: Anjaneya, Date: 25th Oct'2107 -->
+jQuery(document).scroll(function(){ 	 
+	window.clearInterval(vtrcounter);
+	vtrcount=mu_val;
+	vtrcounter=setInterval(timer, 1000);
+	
+});
+/* END */
+jQuery(document).ready(function () {  
+	if(typeof(CKEDITOR)!=='undefined'){
+		CKEDITOR.on('instanceCreated', function(e) {
+
+		e.editor.on('contentDom', function() {
+		e.editor.document.on('keydown', function(event) {
+		window.clearInterval(vtrcounter);
+		vtrcount=mu_val;
+
+		vtrcounter=setInterval(timer, 1000);
+		});
+		e.editor.document.on('mousedown', function(event) {
+		window.clearInterval(vtrcounter);
+		vtrcount=mu_val;
+
+		vtrcounter=setInterval(timer, 1000);
+					});
+			});
+		});
+	}
+	<!-- Auto logout universal, Dev: Anjaneya, Date: 25th Oct'2107 -->
+	IdleTimeoutPlus.start({
+		idleTimeLimit: mu_val,
+		bootstrap : false,
+		warnTimeLimit : 60,
+		warnMessage : 'Session is about to expire!',
+		redirectUrl : 'index.php?module=Users&action=Logout',
+		logoutUrl : 'index.php?module=Users&action=Logout',
+		logoutautourl : 'index.php?module=Users&action=Logout',
+		warnLogoutButton : null,
+		multiWindowSupport : true
+	}); 
+	/* END */
+});
+//Added By sri For auto logout in 15 mins end 
+{/literal}
+</script>
 {/strip}

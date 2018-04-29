@@ -70,14 +70,20 @@
 							</select>
 						{/if}
 						{vtranslate($FIELD_MODEL->get('label'), $MODULE)}
+					{elseif ($FIELD_MODEL->getName() eq 'autologout_time') && ($USER_MODEL->get('is_admin') neq 'on')}
+
 					{else}
 						{vtranslate($FIELD_MODEL->get('label'), $MODULE)}
 					{/if}
 					{if $FIELD_MODEL->isMandatory() eq true} <span class="redColor">*</span> {/if}
 					</td>
+					{if ($FIELD_MODEL->getName() eq 'autologout_time') && ($USER_MODEL->get('is_admin') neq 'on')}
+					
+					{else}
 					<td class="fieldValue {$WIDTHTYPE}" {if $FIELD_MODEL->get('uitype') eq '19'} colspan="3" {assign var=COUNTER value=$COUNTER+1} {/if}>
 						{include file=$FIELD_MODEL->getUITypeModel()->getTemplateName()|@vtemplate_path:$MODULE}
 					</td>
+					{/if}
 				{/foreach}
 				</tr>
 				{/if}

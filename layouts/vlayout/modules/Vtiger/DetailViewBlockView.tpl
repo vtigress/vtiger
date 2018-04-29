@@ -83,6 +83,9 @@
 				{else}
 					{assign var=COUNTER value=$COUNTER+1}
 				 {/if}
+				 {if ($FIELD_MODEL->getName() eq 'autologout_time') && ($USER_MODEL->get('is_admin') neq 'on')}
+				 <td></td>
+				 {else}
 				 <td class="fieldLabel {$WIDTHTYPE}" id="{$MODULE_NAME}_detailView_fieldLabel_{$FIELD_MODEL->getName()}" {if $FIELD_MODEL->getName() eq 'description' or $FIELD_MODEL->get('uitype') eq '69'} style='width:8%'{/if}>
 					 <label class="muted pull-right marginRight10px">
 						 {vtranslate({$FIELD_MODEL->get('label')},{$MODULE_NAME})}
@@ -91,6 +94,10 @@
 						{/if}
 					 </label>
 				 </td>
+				 {/if}
+				 {if ($FIELD_MODEL->getName() eq 'autologout_time') && ($USER_MODEL->get('is_admin') neq 'on')}
+				 <td></td>
+				 {else}
 				 <td class="fieldValue {$WIDTHTYPE}" id="{$MODULE_NAME}_detailView_fieldValue_{$FIELD_MODEL->getName()}" {if $FIELD_MODEL->get('uitype') eq '19' or $FIELD_MODEL->get('uitype') eq '20'} colspan="3" {assign var=COUNTER value=$COUNTER+1} {/if}>
 					 <span class="value" data-field-type="{$FIELD_MODEL->getFieldDataType()}" {if $FIELD_MODEL->get('uitype') eq '19' or $FIELD_MODEL->get('uitype') eq '20' or $FIELD_MODEL->get('uitype') eq '21'} style="white-space:normal;" {/if}>
                         {include file=vtemplate_path($FIELD_MODEL->getUITypeModel()->getDetailViewTemplateName(),$MODULE_NAME) FIELD_MODEL=$FIELD_MODEL USER_MODEL=$USER_MODEL MODULE=$MODULE_NAME RECORD=$RECORD}
@@ -106,6 +113,7 @@
 						 </span>
 					 {/if}
 				 </td>
+				 {/if}
 			 {/if}
 
 		{if $FIELD_MODEL_LIST|@count eq 1 and $FIELD_MODEL->get('uitype') neq "19" and $FIELD_MODEL->get('uitype') neq "20" and $FIELD_MODEL->get('uitype') neq "30" and $FIELD_MODEL->get('name') neq "recurringtype" and $FIELD_MODEL->get('uitype') neq "69" and $FIELD_MODEL->get('uitype') neq "105"}
